@@ -9,4 +9,4 @@ Um protótipo encontra-se online no seguinte link : [webchat IO](https://webchat
 
 #Como Iniciar
 Para iniciar é bem simples , primeiramente tenha em sua máquina instalado Nodejs versão acima ou equivalente a 4.4.7 , faça o download ou clone
-do repositório , acesse a pasta via prompt de comando , e digite "node index" e pressione enter , pronto agora é só acessar pelo navegador o seguinte url : "http://loalhost:3000".
+do repositório , acesse a pasta via prompt de comando , e digite "node index" e pressione enter , pronto agora é só acessar pelo navegador o seguinte url : "http://localhost:3000".

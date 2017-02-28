@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title> WebChat IO </title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/someajusts.css">
+    <link rel="icon" type="image/png" size = "16x16" href="imgs/icon.png" />
+
+    <script src = "/socket.io/socket.io.js"></script>
+    <script src = "/js/vue.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <style media="screen">
+
+        #msgs {
+
+            overflow-y: auto !important;
+            padding-top: 5px;
+        }
+
+    </style>
+
+  </head>
+  <body>
+
+      <div id = "appcontrol" >
+
+          <view-app v-bind:is ="viewpage" v-bind:userinfo = "userinfo" v-bind:socket="socket"> </view-app>
+
+      </div>
+
+      <script src="/js/materialize.min.js"></script>
+      <!-- <script src = "/js/main.js"></script> -->
+      <script src = "/js/main.min.js"></script>
+
+
+
+
+
+  </body>
+</html>

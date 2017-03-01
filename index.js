@@ -189,7 +189,7 @@ io.sockets.on('connection', socket => {
 
         var sessionhash = crypto('sha256', secret).update(session).digest('hex');
 
-        if(sessions[sessionhash] === undefined){
+        if(sessions[sessionhash] === undefined && socket.sessions.indexOf(session) === -1){
 
             socket.sessionName = session;
             socket.session = sessionhash;
@@ -210,9 +210,9 @@ io.sockets.on('connection', socket => {
 
     socket.on("newsession", session => {
 
-        if(sessions[session] !== undefined){
+        if(sessions[session] !== undefined && socket.sessions.indexOf(session) === -1){
 
-
+            console.log(socket.sessions)
             socket.session = session;
             socket.sessions.push(session);
 
@@ -230,7 +230,7 @@ io.sockets.on('connection', socket => {
 
     socket.on("publicsession", () => {
 
-        if(sessions["__public_session__"] !== undefined){
+        if(sessions["__public_session__"] !== undefined && socket.sessions.indexOf('__public_session__') === -1){
 
             if(users[socket.username] !== undefined){
                 socket.session = '__public_session__';

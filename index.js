@@ -3,10 +3,13 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var fs = require('fs');
+var crypto = require('crypto').createHmac;
+var secret = new String("prototype of a webchat").split("").reverse().join("");
 var onlines = 0;
 var connections = [];
 var users = {};
 var sessions = {};
+
 
 Object.prototype.indexOf = function (valueSearch) {
 
@@ -35,6 +38,17 @@ function getDateNow() {
     var datenow = new Date();
     datenow = [`${datenow.getHours()}`, `${datenow.getMinutes()}`, `${datenow.getSeconds()}`];
     return `${datenow[0].length < 2 ? '0' + datenow[0] : datenow[0]} : ${datenow[1].length < 2 ? '0' + datenow[1] : datenow[1]} : ${datenow[2].length < 2 ? '0' + datenow[2] : datenow[2]}`;
+}
+
+function returnOpenSessions () {
+
+    var valueReturn = [];
+
+    for(session in sessions)
+        if(sessions[session].isOpen === true)
+            valueReturn.push({name:sessions[session].name, id:session});
+
+    return valueReturn;
 }
 
 function sendToSession (type, data) {
@@ -92,17 +106,17 @@ io.sockets.on('connection', socket => {
 
                 if(sessions[session] !== undefined){
 
+                    sessions[session].isOpen === true ? io.sockets.emit("getAllSessionsOpen", returnOpenSessions()) : null;
                     sendToSession("event_conn", {username:users[socket.username].username, session, msg:"se desconectou"});
                     sessions[session].splice(sessions[session].indexOf(socket), 1);
                     session !== '__public_session__' && sessions[session].length <= 0 ? delete sessions[session] : null
+
                 }
 
 
             });
 
             connections.splice(connections.indexOf(users[socket.username].username), 1);
-
-
 
             delete users[socket.username];
 
@@ -171,15 +185,22 @@ io.sockets.on('connection', socket => {
           }
     });
 
-    socket.on("createnewsession", session => {
+    socket.on("createnewsession", (session, options) => {
 
-        if(sessions[session] === undefined){
-            socket.session = session;
-            socket.sessions.push(session);
-            sessions[session] = [];
-            sessions[session].indexOf(socket) >= 0 ? null : sessions[session].push(socket);
+        var sessionhash = crypto('sha256', secret).update(session).digest('hex');
 
-            socket.emit("erroronsession", false);
+        if(sessions[sessionhash] === undefined){
+
+            socket.sessionName = session;
+            socket.session = sessionhash;
+            socket.sessions.push(sessionhash);
+            sessions[sessionhash] = [];
+            sessions[sessionhash].indexOf(socket) >= 0 ? null : sessions[sessionhash].push(socket);
+            sessions[sessionhash].isOpen = options.opsess;
+            sessions[sessionhash].name = session;
+            // option.opsess == true ? opensessions.push({id:sessionhash, name:session}) : null;
+            options.opsess === true ? io.sockets.emit("getAllSessionsOpen", returnOpenSessions()) : null;
+            socket.emit("erroronsession", false, {id:sessionhash, name:session, opens:options.opsess});
 
         }
         else
@@ -197,7 +218,7 @@ io.sockets.on('connection', socket => {
 
             sessions[session].indexOf(socket) >= 0 ? null : sessions[session].push(socket);
 
-            socket.emit("erroronsession", false);
+            socket.emit("erroronsession", false, {id:session, name:sessions[session].name, opens:sessions[session].isOpen});
             sendToSession("event_conn", {username:users[socket.username].username, session, msg:"acabou de se conectar"});
 
 
@@ -245,13 +266,22 @@ io.sockets.on('connection', socket => {
               sessions[session.id].splice(sessions[session.id].indexOf(socket), 1);
               sendToSession("event_conn", {username:users[socket.username].username, session:session.id, msg:"se desconectou"});
               //sessions[session.id].length <= 0 ? sessions.splice(sessions.indexOf(session.id), 1) : null;
-              session.id !== '__public_session__' ? sessions[session.id].length <= 0 ? delete sessions[session.id] : null : null;
+              if(session.id !== '__public_session__' && sessions[session.id].length <= 0){
+                  delete sessions[session.id];
+                  io.sockets.emit("getAllSessionsOpen", returnOpenSessions());
+              }
+
         }
 
     });
 
     socket.on("changesession", session => {
         socket.session = session;
+        sessions[session] !== undefined ? socket.sessionName = sessions[session].name : null;
+    });
+
+    socket.on("reqAllSessionsOpen", () =>{
+        socket.emit("getAllSessionsOpen", returnOpenSessions());
     });
 
 });

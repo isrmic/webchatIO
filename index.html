@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title> WebChat IO </title>
+    <title> app IO </title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/materialize.min.css">
     <link rel="stylesheet" href="/css/someajusts.css">
-    <link rel="icon" type="image/png" size = "16x16" href="imgs/icon.png" />
+    <link rel="icon" type="image/png" href="imgs/icon.png" />
 
     <script src = "/socket.io/socket.io.js"></script>
     <script src = "/js/vue.min.js"></script>
@@ -19,6 +19,7 @@
         #msgs {
 
             overflow-y: auto !important;
+            overflow-x: hidden;
             padding-top: 5px;
         }
 
@@ -33,13 +34,10 @@
 
       </div>
 
+
       <script src="/js/materialize.min.js"></script>
       <!-- <script src = "/js/main.js"></script> -->
       <script src = "/js/main.min.js"></script>
-
-
-
-
 
   </body>
 </html>

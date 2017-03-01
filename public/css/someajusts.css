@@ -31,11 +31,52 @@
 .click{
     cursor: pointer;
 }
+
+.nickuser {
+
+    padding-right: 5px;
+    margin-left: -10px;
+    font-weight: bold;
+
+}
+
 .configicon {
 
-    padding-bottom: 3px;
+    padding-bottom: 2px;
     vertical-align: middle;
     font-size: 20px;
+}
+
+.alignicon {
+
+    padding-top:3px;
+}
+
+.iconus {
+    min-width: 45px;
+    width: auto;
+}
+
+.showdatemessage {
+
+    padding-bottom: 2px;
+    padding-right: 2px;
+    vertical-align: middle;
+    font-size: 13px;
+
+}
+
+.datemsg {
+    margin-right: -12px;
+    font-size: 10px;
+}
+
+.chip.expand{
+    height: auto;
+}
+
+.collection.spc > div {
+    padding: 7px;
 }
 
 .animated {

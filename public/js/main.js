@@ -3,7 +3,7 @@ var userinfo = {
 }
 var chat = {
     props:["userinfo", "socket"],
-    template:`<div> <div id="chat" class="row"> <div> <ul id="slide-out" data-activates="slide-out" class="side-nav"> <li> <div class="userView"> </div></li><li class=""><a href="#!"><i class="material-icons white-text circle teal lighten-3 col s3 center">perm_identity</i>{{userinfo.nickname}}</a></li><li> <form onsubmit="return false;"> <div class="input-field"> <input id="session" type="search" @keydown.enter="newsession" v-model="sessioninsearch" required> <label class="label-icon" for="session"><i class="material-icons">search</i></label> <i @click="newsession" class="material-icons">done</i> </div></form> </li><li><a class="subheader">Opções de sessão </a></li><li> <a class="waves-effect" @click="createnewsession" href="#"> Criar Nova Sessão </a> </li><li><a @click="publicsession" class="waves-effect" href="#!">Iniciar Em Sessão Pública</a></li> <li> <a href="#" data-activates="slide-out" class="closenavSide"> Close </a> </li> <li v-if="msgerror.condiction===true"><a class="red-text" href="#">{{msgerror.value}}</a></li></ul> </div><nav> <div class="nav-wrapper teal col s12"> <a href="#" data-activates="slide-out" class="button-collapse nav-s"> <i class="material-icons">menu</i> </a> <ul id="nav-mobile" class="left hide-on-med-and-down"> <li> <a href="#" data-activates="slide-out" class="collapse-navside"><i class="material-icons">menu</i></a></li></ul> <div class="center" v-if="startSession"> Sua Sessão Atual é : {{sessionName}}</div></div></nav> <div v-if="startSession"> <div id="viewmsg"> <div id="showmessages" class="col s12 m12 offset-m1 offset-s1"> <ul class="col s12 m3 "> <div class="col s12"> <span class="flow-text"> Sessões </span> </div><div class="collection"> <li class="" v-for="(sess, index) in sessions"> <div class="collection-item"> <a @click="changesession(sess.id, sess.name)" v-bind:class="[sess.id===sessionID ? 'teal-text': 'purple-text']" class=" click waves-light waves-effect" >{{sess.name}} <span v-if="sessionsNews[sess.id].news > 0" class="new badge">{{sessionsNews[sess.id].news}}</span> </a> <a @click="finishsession(sess)" class="right valign click"><i class="material-icons">close</i></a> </div></li></div></ul> <ul id="msgs" class="col s12 m9 right z-depth-1"> <li v-for="(msg, index) in chat" class="msgn animated fadeInLeft">  <div v-if="msg.type==='message' " v-bind:class="[msg.user===userinfo.nickname ? 'purple-text' : 'blue-text']"> <span class = "chip left"> <i class = "material-icons configicon">av_timer</i> {{msg.date}} </span> <div class="chip"> <i class="material-icons left valign">person_pin</i>{{msg.user}}</div>{{msg.value}}</div><div v-else-if="msg.type==='info' "> <div class="col s12"> <span class = "chip right"><i class = "material-icons configicon">av_timer</i> {{msg.date}} </span> <div class="chip right"> <span v-bind:class="msg.class">{{msg.enphase}}</span> {{msg.value}} </div>  </div></div></li></ul> </div></div><div class = "col s3" v-if="Sevent.iswritten===true && Sevent.session===sessionID"> <span class="teal-text"> Algo está sendo escrito ... </span> </div><div class="page-footer"> <form> <div class="col s12 m9 right"> <div class="input-field col s11 m11"> <i class="material-icons prefix">textsms</i> <textarea id="message" class="materialize-textarea" @keyup="eventkeyupmessage" @keydown="eventkeydownmessage" v-model="message"></textarea> <label for="message">message</label> </div><div id="sendmsg" class="valign-wrapper"> <a @click="sendMessage" class="waves-light waves-effect teal-text"><i class="material-icons">send</i></a> </div></div></form> </div></div></div> </div>`,
+    template:`<div> <div id="chat" class="row"> <div> <ul id="slide-out" data-activates="slide-out" class="side-nav"> <li> <div class="userView"> </div></li><li class=""><a href="#!"><i class="material-icons white-text circle teal lighten-3 col s3 center">perm_identity</i>{{userinfo.nickname}}</a></li><li> <form onsubmit="return false;"> <div class="input-field"> <input id="session" type="search" @keydown.enter="newsession" v-model="sessioninsearch" required> <label class="label-icon" for="session"><i class="material-icons">search</i></label> <i @click="newsession" class="material-icons">done</i> </div></form> </li><li><a class="subheader">Opções de sessão </a></li><li> <a class="waves-effect" @click="createnewsession" href="#"> Criar Nova Sessão </a> </li><li> <a><input v-model = "opensession" type="checkbox" id="opensession"/><label for="opensession">Sessão Aberta</label></a> </li><li><a @click="publicsession" class="waves-effect" href="#!">Iniciar Em Sessão Pública</a></li><li v-if="msgerror.condiction===true"><a class="red-text" href="#">{{msgerror.value}}</a></li></ul> </div><nav> <div class="nav-wrapper teal col s12"> <a href="#" data-activates="slide-out" class="button-collapse nav-s"> <i class="material-icons">menu</i> </a> <ul id="nav-mobile" class="left hide-on-med-and-down"> <li> <a href="#" data-activates="slide-out" class="collapse-navside"><i class="material-icons">menu</i></a></li></ul>  <div class="center" v-if="startSession"> Sua Sessão Atual é :{{sessionName}}</div> <div class="right click"  v-if="startSession" @click = "startSession = false"> <i class = "material-icons black-text">skip_previous</i> </div></div></nav> <div v-if="startSession===false" class="row col s12"> <div class="flow-text center"> Sessões Abertas </div><div class="col s10 offset-s1 collection spc"> <div v-for="sessop in opensessions" class="left"> <a href="#" @click="newsession(sessop)" class="btn transparent teal-text waves-effect waves-teal">{{sessop.name}}</a> </div></div></div> <div v-if="startSession"> <div id="viewmsg"> <div id="showmessages" class="col s12 m12 offset-m1 offset-s1"> <span v-if = "sessionID !== '__public_session__' " class = "">ID : {{sessionID}} </span> <ul class="col s12 m3 "> <div class="col s12"> <span class="flow-text"> Sessões </span> </div><div class="collection"> <li class="" v-for="(sess, index) in sessions"> <div class="collection-item"> <a @click="changesession(sess.id, sess.name)" v-bind:class="[sess.id===sessionID ? 'teal-text': 'purple-text']" class=" click waves-light waves-effect">{{sess.name}}<span v-if="sessionsNews[sess.id].news > 0" class="new badge">{{sessionsNews[sess.id].news}}</span> </a> <a @click="finishsession(sess)" class="right valign click"><i class="material-icons">close</i></a> </div></li></div></ul> <ul id="msgs" class="col s12 m9 right z-depth-1"> <li v-for="(msg, index) in chat" v-bind:class="[msg.user===userinfo.nickname ? 'fadeInLeft' : 'fadeInRight']" class="msgn animated col s12"> <div v-if="msg.type==='message' "> <div v-bind:class="[msg.user===userinfo.nickname ? 'left blue white-text' : 'right black-text']" class="chip expand"> <div class=""> <div v-bind:class="[msg.user===userinfo.nickname ? 'left white-text' : 'right teal-text darken-4']" class="col s12"> <span class="nickuser">{{msg.user}}</span> <div class="right datemsg"><i class="material-icons showdatemessage">query_builder</i>{{msg.date}}</div></div></div></br>{{msg.value}}</div></div><div v-else-if="msg.type==='info' "> <div class="col s12 center"> <div class="chip"> <span v-bind:class="msg.class">{{msg.enphase}}</span>{{msg.value}}<span class="right"> <i class="material-icons configicon">query_builder</i>{{msg.date}}</span></div></div></div></li></ul> </div></div><div class="col s3" v-if="Sevent.iswritten===true && Sevent.session===sessionID"> <span class="teal-text"> Algo está sendo escrito ... </span> </div><div class="page-footer"> <form> <div class="col s12 m9 right"> <div class="input-field col s11 m11"> <i class="material-icons prefix">textsms</i> <textarea id="message" class="materialize-textarea" @keyup="eventkeyupmessage" @keydown="eventkeydownmessage" v-model="message"></textarea> <label for="message">message</label> </div><div id="sendmsg" class="valign-wrapper"> <a @click="sendMessage" class="waves-light waves-effect teal-text"><i class="material-icons">send</i></a> </div></div></form> </div></div></div> </div>`,
 
     created () {
 
@@ -18,6 +18,12 @@ var chat = {
         }, 50);
 
         var messages;
+
+        this.socket.on("getAllSessionsOpen", opSessions =>{
+            this.opensessions = opSessions;
+        });
+
+        this.socket.emit("reqAllSessionsOpen");
 
         this.socket.on("receivemessage", data =>{
 
@@ -50,7 +56,7 @@ var chat = {
             messages.scrollTop = messages.scrollHeight;
         });
 
-        this.socket.on("erroronsession", (err, type) => {
+        this.socket.on("erroronsession", (err, data) => {
             if(err)
                 this.msgerror = {condiction:true, value:err}
 
@@ -58,7 +64,7 @@ var chat = {
                 this.startSession = true;
                 this.msgerror.condiction = true ? this.msgerror = { condiction:false, value:'' } : null;
 
-                if(type === 'public'){
+                if(data === 'public'){
 
                     this.sessionID = '__public_session__';
 
@@ -77,14 +83,14 @@ var chat = {
                 }
                 else {
 
-                    this.sessionID = this.sessioninsearch;
-                    this.sessioninsearch = '';
-
+                    this.sessionID = data.id;
                     if(this.sessionsRegister.indexOf(this.sessionID) === -1){
 
-                        this.sessionName = this.sessionID;
+
+                        this.sessionName = data.name;
+                        this.sessioninsearch = '';
                         this.sessionsNews[this.sessionID] = {news:0};
-                        this.sessions.push({id:this.sessionID, name:this.sessionName});
+                        this.sessions.push({id:this.sessionID, name:this.sessionName, open:data.opens});
                         this.chatStorage[this.sessionID] = [];
                         this.chat = this.chatStorage[this.sessionID];
                         this.sessionsRegister.push(this.sessionID);
@@ -116,6 +122,8 @@ var chat = {
             startSession:false,
             sessioninsearch:'',
             sessionID:'',
+            opensession:false,
+            opensessions:[],
             sessions:[],
             sessionsNews:[],
             sessionsRegister:[],
@@ -161,11 +169,13 @@ var chat = {
             if(this.message !== "" || this.message.length > 0){
                 this.socket.emit("sendmessage", {session:this.sessionID, user:this.userinfo.nickname, msg:this.message});
             }
+            document.getElementById('message').value = ''; // for clear message field on firefox;
             this.message = '';
 
         },
 
         eventkeydownmessage (evt) {
+
             if(evt.keyCode === 13 && (this.message !== '' || this.message.length > 0))
                 this.sendMessage();
             else
@@ -186,7 +196,8 @@ var chat = {
         createnewsession () {
 
             if(this.sessioninsearch !== ''){
-                this.socket.emit("createnewsession", this.sessioninsearch);
+                this.socket.emit("createnewsession", this.sessioninsearch, {opsess:this.opensession});
+                this.opensession = false;
             }
 
             else {
@@ -198,7 +209,11 @@ var chat = {
 
         newsession () {
 
-            if(this.sessioninsearch !== ''){
+            if(arguments.length > 0 && arguments[0].id !== undefined){
+                this.socket.emit("newsession", arguments[0].id);
+            }
+
+            else if(this.sessioninsearch !== ''){
                 this.socket.emit("newsession", this.sessioninsearch);
             }
         },
@@ -228,8 +243,8 @@ var chat = {
                 this.sessions.splice(this.sessions.indexOf(session), 1);
                 this.socket.emit("finishsession", session);
                 this.sessionsRegister.length === 0 ? this.startSession = false : null;
-                this.sessions[0] !== undefined ? this.changesession(this.sessions[0].id, this.sessions[0].name) : null;
-                this.sessionID = '';
+                this.sessions[0] !== undefined ? this.changesession(this.sessions[0].id, this.sessions[0].name) : this.sessionID = '';
+
             }
         }
     },

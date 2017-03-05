@@ -10,6 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.1",
-    "socket.io": "^1.7.3"
+    "socket.io": "^1.7.3",
+    "multer": "1.1.0"
+  },
+  "devDependencies": {
+    "should": "~7.1.0",
+    "mocha": "~2.3.3",
+    "supertest": "~1.1.0"
   }
 }

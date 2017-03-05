@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title> app IO </title>
+    <title id = "control-head" v-html = "title"> </title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/materialize.min.css">
@@ -17,10 +17,10 @@
     <style media="screen">
 
         #msgs {
-
-            overflow-y: auto !important;
+            overflow-y: auto;
             overflow-x: hidden;
             padding-top: 5px;
+            z-index: 2;
         }
 
     </style>
@@ -30,10 +30,11 @@
 
       <div id = "appcontrol" >
 
-          <view-app v-bind:is ="viewpage" v-bind:userinfo = "userinfo" v-bind:socket="socket"> </view-app>
+          <view-app v-bind:is ="viewpage" v-bind:userinfo = "userinfo" v-bind:socket="socket"></view-app>
+          <!-- <input v-model = "opensession" type="checkbox" id="opensession"/><label for="opensession">Sessão Aberta</label>
+          <div class="switch"> <label> Private <input id="opensession" v-model="opensession" type="checkbox"> <span class="lever"></span> Public </label> </div> -->
 
       </div>
-
 
       <script src="/js/materialize.min.js"></script>
       <!-- <script src = "/js/main.js"></script> -->

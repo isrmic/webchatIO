@@ -8,7 +8,7 @@ e assim poder se conectar com todos que entraram nesta sessão ou podendo també
 Um protótipo encontra-se online no seguinte link : [webchat IO](https://webchatio.herokuapp.com) .
 
 #Como Iniciar
-Para iniciar é bem simples , primeiramente tenha em sua máquina instalado Nodejs versão acima ou equivalente a 4.4.7 , faça o download ou clone do repositório , acesse a pasta via prompt de comando , e instale as dependências com o seguinte comando : ```npm install```, após instalar as dependências digite rode o comando : ```"node index"``` , pronto agora é só acessar pelo navegador o seguinte url : "http://localhost:3000".
+Para iniciar é bem simples , primeiramente tenha em sua máquina instalado Nodejs versão acima ou equivalente a 4.4.7 , faça o download ou clone do repositório , acesse a pasta via prompt de comando , e instale as dependências com o seguinte comando : ```npm install```, após instalar as dependências rode o comando : ```"node index"``` , pronto agora é só acessar pelo navegador o seguinte url : "http://localhost:3000".
 
 #Dicas
 Para usar o sistema de bot basta criar um arquivo json chamado "bot.json" e configura-lo como deve responder e ao que deve responder,

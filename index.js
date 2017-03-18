@@ -88,7 +88,7 @@ app.post('/sendfileTemporary', (req, res) => {
 
                 data.type = 'image';
                 sessions[session] !== undefined ? (sessions[session]._namefilesTemporary.push(filepath), sendToSession("s_message", {session, msg:{session, user, msg:data} } )) : null;
-                res.send("file upload is ok");                
+                res.send("file upload is ok");
             });
          }
     });
